@@ -112,9 +112,21 @@ import {
               position={[hospital.lat, hospital.lon]}
             >
               <Popup>
-                🏥{" "}
-                {hospital.tags?.name || "Unnamed Hospital"}
-              </Popup>
+  <div className="min-w-[200px]">
+    <h3 className="font-bold text-lg mb-2">
+      🏥 {hospital.tags?.name || "Unnamed Hospital"}
+    </h3>
+
+    <a
+      href={`https://www.google.com/maps/dir/?api=1&destination=${hospital.lat},${hospital.lon}`}
+      target="_blank"
+      rel="noopener noreferrer"
+      className="bg-blue-600 text-white px-3 py-2 rounded-lg inline-block mt-2"
+    >
+      🧭 Get Directions
+    </a>
+  </div>
+</Popup>
             </Marker>
           ))}
         </MapContainer>
