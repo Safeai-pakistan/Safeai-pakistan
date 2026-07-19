@@ -1,75 +1,114 @@
-# React + TypeScript + Vite
+# 🚨 SafeAI – Pakistan's AI-Powered Disaster & Emergency Assistant
 
-This template provides a minimal setup to get React working in Vite with HMR and some ESLint rules.
+SafeAI is a modern web application designed to help people during disasters and emergencies in Pakistan.
 
-Currently, two official plugins are available:
+It provides AI-powered emergency guidance, nearby hospitals, emergency contacts, GPS location, SOS features, disaster survival guides, voice assistance, and more.
 
-- [@vitejs/plugin-react](https://github.com/vitejs/vite-plugin-react/blob/main/packages/plugin-react) uses [Oxc](https://oxc.rs)
-- [@vitejs/plugin-react-swc](https://github.com/vitejs/vite-plugin-react/blob/main/packages/plugin-react-swc) uses [SWC](https://swc.rs/)
+---
 
-## React Compiler
+# 🌐 Live Demo
 
-The React Compiler is not enabled on this template because of its impact on dev & build performances. To add it, see [this documentation](https://react.dev/learn/react-compiler/installation).
+https://safeai-pakistan.vercel.app/
 
-## Expanding the ESLint configuration
+---
 
-If you are developing a production application, we recommend updating the configuration to enable type-aware lint rules:
+# 📸 Features
 
-```js
-export default defineConfig([
-  globalIgnores(['dist']),
-  {
-    files: ['**/*.{ts,tsx}'],
-    extends: [
-      // Other configs...
+- 🤖 AI Emergency Assistant (Google Gemini AI)
+- 📍 Live GPS Location
+- 🏥 Nearby Hospitals
+- 🚑 Pakistan Emergency Contacts
+- 🆘 Floating SOS Button
+- 🎤 Voice Input
+- 🔊 AI Voice Response
+- 📋 Copy AI Response
+- 🌦 Weather Information
+- 🧰 Emergency Toolkit
+- 📱 Fully Responsive Design
+- ⚡ Fast Performance
+- 🌍 Deployed on Vercel
 
-      // Remove tseslint.configs.recommended and replace with this
-      tseslint.configs.recommendedTypeChecked,
-      // Alternatively, use this for stricter rules
-      tseslint.configs.strictTypeChecked,
-      // Optionally, add this for stylistic rules
-      tseslint.configs.stylisticTypeChecked,
+---
 
-      // Other configs...
-    ],
-    languageOptions: {
-      parserOptions: {
-        project: ['./tsconfig.node.json', './tsconfig.app.json'],
-        tsconfigRootDir: import.meta.dirname,
-      },
-      // other options...
-    },
-  },
-])
+# 🛠 Tech Stack
 
+- React 19
+- TypeScript
+- Vite
+- Tailwind CSS
+- Google Gemini API
+- React Leaflet
+- OpenStreetMap
+- Lucide React
+- React Hot Toast
+- Vercel
+
+---
+
+# 🚀 Installation
+
+```bash
+git clone https://github.com/Safeai-pakistan/Safeai-pakistan.git
+
+cd safeai
+
+npm install
+
+npm run dev
 ```
 
-You can also install [eslint-plugin-react-x](https://github.com/Rel1cx/eslint-react/tree/main/packages/plugins/eslint-plugin-react-x) and [eslint-plugin-react-dom](https://github.com/Rel1cx/eslint-react/tree/main/packages/plugins/eslint-plugin-react-dom) for React-specific lint rules:
+---
 
-```js
-// eslint.config.js
-import reactX from 'eslint-plugin-react-x'
-import reactDom from 'eslint-plugin-react-dom'
+# 🔑 Environment Variables
 
-export default defineConfig([
-  globalIgnores(['dist']),
-  {
-    files: ['**/*.{ts,tsx}'],
-    extends: [
-      // Other configs...
-      // Enable lint rules for React
-      reactX.configs['recommended-typescript'],
-      // Enable lint rules for React DOM
-      reactDom.configs.recommended,
-    ],
-    languageOptions: {
-      parserOptions: {
-        project: ['./tsconfig.node.json', './tsconfig.app.json'],
-        tsconfigRootDir: import.meta.dirname,
-      },
-      // other options...
-    },
-  },
-])
+Create a `.env` file.
+
+```env
+VITE_GEMINI_API_KEY=YOUR_API_KEY
+```
+
+---
+
+# 📂 Project Structure
 
 ```
+src/
+ ├── components/
+ ├── services/
+ ├── data/
+ ├── App.tsx
+ └── main.tsx
+```
+
+---
+
+# 🎯 Main Modules
+
+- AI Chat
+- Live Map
+- Nearby Hospitals
+- Emergency Contacts
+- Emergency Guides
+- Weather
+- SOS
+- Emergency Toolkit
+
+---
+
+# 📱 Responsive
+
+- Desktop
+- Tablet
+- Mobile
+
+---
+
+# 👨‍💻 Developer
+
+Created by Rana Computer
+
+---
+
+# 📄 License
+
+MIT License
