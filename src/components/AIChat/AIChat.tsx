@@ -1,238 +1,255 @@
-import { useState } from "react";
+import { useState, useRef, useEffect } from "react";
 import { askSafeAI } from "../../services/gemini";
-import { Mic, Bot, User } from "lucide-react";
-import toast from "react-hot-toast";
+import { Bot, User, Send, Loader2, Trash2 } from "lucide-react";
+
+type Message = {
+  role: "user" | "assistant";
+  text: string;
+};
 
 export default function AIChat() {
-  const [message, setMessage] = useState("");
-  const [reply, setReply] = useState("");
+  const [messages, setMessages] = useState<Message[]>([
+    {
+      role: "assistant",
+      text:
+        "👋 Assalam-o-Alaikum! I am SafeAI.\n\nI can help during:\n• Earthquake\n• Fire\n• Flood\n• Medical Emergency\n• Snake Bite\n• Heat Stroke\n• First Aid\n\nDescribe your emergency.",
+    },
+  ]);
+
+  const [input, setInput] = useState("");
   const [loading, setLoading] = useState(false);
 
-  function getEmergencyLevel(text: string) {
-    const t = text.toLowerCase();
+  const bottomRef = useRef<HTMLDivElement>(null);
 
-    if (
-      t.includes("fire") ||
-      t.includes("earthquake") ||
-      t.includes("flood") ||
-      t.includes("explosion") ||
-      t.includes("bleeding") ||
-      t.includes("unconscious")
-    ) {
-      return {
-        level: "HIGH",
-        color: "bg-red-600",
-        number: "🚑 Rescue 1122",
-      };
-    }
+  useEffect(() => {
+    bottomRef.current?.scrollIntoView({
+      behavior: "smooth",
+    });
+  }, [messages]);
 
-    if (
-      t.includes("injury") ||
-      t.includes("accident") ||
-      t.includes("burn")
-    ) {
-      return {
-        level: "MEDIUM",
-        color: "bg-yellow-500",
-        number: "☎️ Local Hospital",
-      };
-    }
+  const sendMessage = async () => {
+    if (!input.trim() || loading) return;
 
-    return {
-      level: "LOW",
-      color: "bg-green-600",
-      number: "ℹ️ Stay Calm",
+    const userMessage: Message = {
+      role: "user",
+      text: input,
     };
-  }
 
-  async function handleAsk() {
-    if (!message.trim()) {
-      toast.error("Please enter a question.");
-      return;
-    }
+    setMessages((prev) => [...prev, userMessage]);
 
+    const question = input;
+
+    setInput("");
     setLoading(true);
 
     try {
-      const result = await askSafeAI(message);
+      const reply = await askSafeAI(question);
 
-      const aiReply = result ?? "No response";
+      const aiMessage: Message = {
+        role: "assistant",
+        text: reply,
+      };
 
-      setReply(aiReply);
-
-      toast.success("AI response received!");
-
-      if ("speechSynthesis" in window) {
-        window.speechSynthesis.cancel();
-
-        const speech = new SpeechSynthesisUtterance(aiReply);
-        speech.lang = "en-US";
-        speech.rate = 1;
-        speech.pitch = 1;
-
-        window.speechSynthesis.speak(speech);
-      }
-    } catch {
-      toast.error("Unable to contact SafeAI.");
+      setMessages((prev) => [...prev, aiMessage]);
+    } catch (error) {
+      setMessages((prev) => [
+        ...prev,
+        {
+          role: "assistant",
+          text:
+            "❌ Sorry, AI service is currently unavailable.\n\nPlease try again after a few moments.",
+        },
+      ]);
     }
 
     setLoading(false);
-  }
+  };
 
-  function startListening() {
-    const SpeechRecognition =
-      (window as any).SpeechRecognition ||
-      (window as any).webkitSpeechRecognition;
+  const clearChat = () => {
+    setMessages([
+      {
+        role: "assistant",
+        text:
+          "👋 Chat cleared.\n\nHow can I help you today?",
+      },
+    ]);
+  };
 
-    if (!SpeechRecognition) {
-      toast.error("Speech Recognition is not supported.");
-      return;
+  const handleKeyDown = (
+    e: React.KeyboardEvent<HTMLTextAreaElement>
+  ) => {
+    if (e.key === "Enter" && !e.shiftKey) {
+      e.preventDefault();
+      sendMessage();
     }
-
-    const recognition = new SpeechRecognition();
-
-    recognition.lang = "en-US";
-    recognition.interimResults = false;
-    recognition.maxAlternatives = 1;
-
-    recognition.onstart = () => {
-      toast("🎤 Listening...");
-    };
-
-    recognition.onresult = (event: any) => {
-      const transcript = event.results[0][0].transcript;
-      setMessage(transcript);
-      toast.success("Voice captured!");
-    };
-
-    recognition.onerror = () => {
-      toast.error("Microphone error.");
-    };
-
-    recognition.start();
-  }
-
-  async function copyResponse() {
-    if (!reply) {
-      toast.error("Nothing to copy.");
-      return;
-    }
-
-    await navigator.clipboard.writeText(reply);
-
-    toast.success("Response copied!");
-  }
-
-  function stopSpeaking() {
-    window.speechSynthesis.cancel();
-    toast("🔇 Voice stopped");
-  }
-
-  function clearChat() {
-    window.speechSynthesis.cancel();
-    setMessage("");
-    setReply("");
-    toast.success("Chat cleared.");
-  }
-
-  const emergency = getEmergencyLevel(message);
+  };
 
   return (
     <section
-      id="ai"
-      className="max-w-4xl mx-auto mt-12 px-5 scroll-mt-24"
+      id="assistant"
+      className="bg-gray-100 py-14 px-4"
     >
-      <div className="bg-slate-900 rounded-2xl shadow-xl border border-slate-800 p-6">
+      <div className="max-w-4xl mx-auto">
 
-        <h2 className="text-3xl font-bold text-white mb-6 flex items-center gap-3">
-          <Bot className="text-cyan-400" size={32} />
-          AI Emergency Assistant
-        </h2>
+        <div className="flex items-center justify-between mb-6">
 
-        <div className="bg-slate-950 rounded-xl border border-slate-800 p-4">
+          <div>
 
-          <div className="flex items-center gap-2 mb-3 text-cyan-400">
-            <User size={18} />
-            <span className="font-semibold">Your Message</span>
+            <h2 className="text-3xl font-bold text-blue-700">
+              AI Emergency Assistant
+            </h2>
+
+            <p className="text-gray-600 mt-1">
+              Ask anything related to disasters,
+              accidents or first aid.
+            </p>
+
           </div>
-
-          <textarea
-            className="w-full p-4 rounded-xl bg-white text-black"
-            rows={5}
-            placeholder="Example: There is a fire in my kitchen..."
-            value={message}
-            onChange={(e) => setMessage(e.target.value)}
-          />
-        </div>
-
-        <div className="flex gap-3 mt-5 flex-wrap">
-
-          <button
-            onClick={handleAsk}
-            className="bg-red-600 hover:bg-red-700 text-white px-6 py-3 rounded-xl"
-          >
-            {loading ? "⏳ Thinking..." : "🤖 Ask SafeAI"}
-          </button>
-
-          <button
-            onClick={startListening}
-            className="bg-green-600 hover:bg-green-700 text-white px-6 py-3 rounded-xl flex items-center gap-2"
-          >
-            <Mic size={20} />
-            Speak
-          </button>
-
-          <button
-            onClick={copyResponse}
-            className="bg-blue-600 hover:bg-blue-700 text-white px-6 py-3 rounded-xl"
-          >
-            📋 Copy
-          </button>
-
-          <button
-            onClick={stopSpeaking}
-            className="bg-orange-600 hover:bg-orange-700 text-white px-6 py-3 rounded-xl"
-          >
-            🔇 Stop Voice
-          </button>
 
           <button
             onClick={clearChat}
-            className="bg-slate-700 hover:bg-slate-600 text-white px-6 py-3 rounded-xl"
+            className="flex items-center gap-2 bg-red-500 hover:bg-red-600 text-white px-4 py-2 rounded-lg transition"
           >
-            🗑 Clear
+            <Trash2 size={18} />
+            Clear
           </button>
 
         </div>
 
-        {reply && (
-          <div className="mt-8 bg-slate-950 border border-slate-800 rounded-2xl p-6">
+        <div className="bg-white rounded-2xl shadow-lg overflow-hidden">
 
-            <div
-              className={`${emergency.color} inline-block px-4 py-2 rounded-full font-bold mb-4 text-white`}
-            >
-              🚨 Emergency Level: {emergency.level}
-            </div>
+          <div className="h-[500px] overflow-y-auto p-5 space-y-5 bg-slate-50">
 
-            <p className="mb-5 text-white">
-              <strong>Recommended Contact:</strong>
-              <br />
-              {emergency.number}
-            </p>
+            {messages.map((msg, index) => (
 
-            <div className="flex items-center gap-2 text-cyan-400 mb-3">
-              <Bot size={18} />
-              <span className="font-semibold">SafeAI Response</span>
-            </div>
+              <div
+                key={index}
+                className={`flex ${
+                  msg.role === "user"
+                    ? "justify-end"
+                    : "justify-start"
+                }`}
+              >
 
-            <div className="bg-slate-900 border-l-4 border-cyan-400 rounded-xl p-5 text-white whitespace-pre-wrap leading-7">
-              {reply}
-            </div>
+                <div
+                  className={`max-w-[80%] rounded-2xl p-4 whitespace-pre-wrap leading-7 ${
+                    msg.role === "user"
+                    ? "bg-blue-600 text-white"
+                    : "bg-white border border-gray-200 text-gray-900 shadow-sm"
+                  }`}
+                >
+
+                  <div className="flex items-center gap-2 mb-2">
+
+                    {msg.role === "assistant" ? (
+                      <>
+                        <Bot
+                          size={20}
+                          className="text-blue-600"
+                        />
+                        <span className="font-semibold">
+                          SafeAI
+                        </span>
+                      </>
+                    ) : (
+                      <>
+                        <User
+                          size={20}
+                          className="text-white"
+                        />
+                        <span className="font-semibold">
+                          You
+                        </span>
+                      </>
+                    )}
+
+                  </div>
+
+                  <p
+  className={
+    msg.role === "assistant"
+      ? "text-gray-900"
+      : "text-white"
+  }
+>
+  {msg.text}
+</p>
+                </div>
+
+              </div>
+
+            ))}
+
+            {loading && (
+
+              <div className="flex justify-start">
+
+                <div className="bg-white border rounded-xl p-4 flex items-center gap-3">
+
+                  <Loader2
+                    className="animate-spin text-blue-600"
+                    size={22}
+                  />
+
+                  <span>
+                    SafeAI is thinking...
+                  </span>
+
+                </div>
+
+              </div>
+
+            )}
+
+            <div ref={bottomRef}></div>
 
           </div>
-        )}
+          <div className="border-t bg-white p-4">
 
-      </div>
-    </section>
-  );
+<textarea
+  value={input}
+  onChange={(e) => setInput(e.target.value)}
+  onKeyDown={handleKeyDown}
+  rows={3}
+  placeholder="Describe your emergency..."
+  className="w-full border border-gray-300 bg-white text-gray-900 placeholder:text-gray-500 rounded-xl p-3 resize-none focus:outline-none focus:ring-2 focus:ring-blue-500"/>
+
+<div className="flex justify-between items-center mt-3">
+
+  <p className="text-sm text-gray-500">
+    Press <strong>Enter</strong> to send •
+    <strong> Shift + Enter</strong> for new line
+  </p>
+
+  <button
+    onClick={sendMessage}
+    disabled={loading || !input.trim()}
+    className="flex items-center gap-2 bg-blue-600 hover:bg-blue-700 disabled:bg-gray-400 text-white px-6 py-3 rounded-xl transition"
+  >
+    {loading ? (
+      <>
+        <Loader2
+          size={18}
+          className="animate-spin"
+        />
+        Sending...
+      </>
+    ) : (
+      <>
+        <Send size={18} />
+        Send
+      </>
+    )}
+  </button>
+
+</div>
+
+</div>
+
+</div>
+
+</div>
+
+</section>
+);
 }

@@ -8,7 +8,8 @@ import {
   import { useEffect, useState } from "react";
   import L from "leaflet";
   import { getNearbyHospitals } from "../../services/hospital";
-  
+  import { Navigation, Hospital, MapPin } from "lucide-react";
+
   delete (L.Icon.Default.prototype as any)._getIconUrl;
   
   L.Icon.Default.mergeOptions({
@@ -47,6 +48,8 @@ import {
   
     const [hospitals, setHospitals] = useState<Hospital[]>([]);
     const [loading, setLoading] = useState(true);
+    const nearest = hospitals.slice(0, 5);
+
   
     useEffect(() => {
       navigator.geolocation.getCurrentPosition(
@@ -147,6 +150,73 @@ import {
             </Marker>
           ))}
         </MapContainer>
+        <div className="mt-8">
+
+  <h3 className="text-2xl font-bold text-white mb-5">
+    🏥 Nearby Hospitals
+  </h3>
+
+  <div className="grid md:grid-cols-2 gap-4">
+
+    {nearest.map((hospital) => (
+
+      <div
+        key={hospital.id}
+        className="bg-slate-900 border border-slate-800 rounded-xl p-5 hover:border-cyan-500 transition"
+      >
+
+        <div className="flex items-center gap-3">
+
+          <Hospital
+            className="text-red-400"
+            size={26}
+          />
+
+          <div>
+
+            <h4 className="text-white font-bold text-lg">
+              {hospital.tags?.name || "Unnamed Hospital"}
+            </h4>
+
+            <p className="text-slate-400 text-sm">
+              Nearby Medical Facility
+            </p>
+
+          </div>
+
+        </div>
+
+        <div className="flex gap-3 mt-5">
+
+          <a
+            href={`https://www.google.com/maps/dir/?api=1&destination=${hospital.lat},${hospital.lon}`}
+            target="_blank"
+            rel="noreferrer"
+            className="flex items-center gap-2 bg-blue-600 hover:bg-blue-700 px-4 py-2 rounded-lg text-white"
+          >
+            <Navigation size={18} />
+            Directions
+          </a>
+
+          <a
+            href={`https://maps.google.com/?q=${hospital.lat},${hospital.lon}`}
+            target="_blank"
+            rel="noreferrer"
+            className="flex items-center gap-2 border border-slate-700 hover:border-cyan-500 px-4 py-2 rounded-lg text-white"
+          >
+            <MapPin size={18} />
+            View
+          </a>
+
+        </div>
+
+      </div>
+
+    ))}
+
+  </div>
+
+</div>
       </section>
     );
   }

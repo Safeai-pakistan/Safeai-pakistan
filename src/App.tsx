@@ -14,28 +14,50 @@ import Footer from "./components/Footer/Footer";
 
 function App() {
   return (
-    <div className="min-h-screen bg-slate-950">
+    <div className="min-h-screen bg-slate-950 text-white overflow-x-hidden">
       <Navbar />
 
-      <Hero />
+      <main>
+        <section id="hero">
+          <Hero />
+        </section>
 
-      <QuickActions />
+        <section id="quick-actions">
+          <QuickActions />
+        </section>
 
-      <EmergencyCards />
+        <section id="disasters">
+          <EmergencyCards />
+        </section>
 
-      <Map />
+        <section id="map">
+          <Map />
+        </section>
 
-      <SOS />
+        <section id="sos">
+          <SOS />
+        </section>
 
-      <AIChat />
+        <section id="ai">
+          <AIChat />
+        </section>
 
-      <EmergencyGuides />
+        <section id="guides">
+          <EmergencyGuides />
+        </section>
 
-      <EmergencyToolkit />
+        <section id="toolkit">
+          <EmergencyToolkit />
+        </section>
 
-      <EmergencyContacts />
+        <section id="contacts">
+          <EmergencyContacts />
+        </section>
 
-      <Weather />
+        <section id="weather">
+          <Weather />
+        </section>
+      </main>
 
       <Footer />
 
