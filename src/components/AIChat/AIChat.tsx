@@ -19,10 +19,17 @@ export default function AIChat() {
   const [input, setInput] = useState("");
   const [loading, setLoading] = useState(false);
 
-  const bottomRef = useRef<HTMLDivElement>(null);
+  const firstLoad = useRef(true);
+  const chatContainerRef = useRef<HTMLDivElement>(null);
 
   useEffect(() => {
-    bottomRef.current?.scrollIntoView({
+    if (firstLoad.current) {
+      firstLoad.current = false;
+      return;
+    }
+
+    chatContainerRef.current?.scrollTo({
+      top: chatContainerRef.current.scrollHeight,
       behavior: "smooth",
     });
   }, [messages]);
@@ -30,14 +37,15 @@ export default function AIChat() {
   const sendMessage = async () => {
     if (!input.trim() || loading) return;
 
-    const userMessage: Message = {
-      role: "user",
-      text: input,
-    };
-
-    setMessages((prev) => [...prev, userMessage]);
-
     const question = input;
+
+    setMessages((prev) => [
+      ...prev,
+      {
+        role: "user",
+        text: question,
+      },
+    ]);
 
     setInput("");
     setLoading(true);
@@ -45,13 +53,14 @@ export default function AIChat() {
     try {
       const reply = await askSafeAI(question);
 
-      const aiMessage: Message = {
-        role: "assistant",
-        text: reply,
-      };
-
-      setMessages((prev) => [...prev, aiMessage]);
-    } catch (error) {
+      setMessages((prev) => [
+        ...prev,
+        {
+          role: "assistant",
+          text: reply,
+        },
+      ]);
+    } catch {
       setMessages((prev) => [
         ...prev,
         {
@@ -69,8 +78,7 @@ export default function AIChat() {
     setMessages([
       {
         role: "assistant",
-        text:
-          "👋 Chat cleared.\n\nHow can I help you today?",
+        text: "👋 Chat cleared.\n\nHow can I help you today?",
       },
     ]);
   };
@@ -94,7 +102,6 @@ export default function AIChat() {
         <div className="flex items-center justify-between mb-6">
 
           <div>
-
             <h2 className="text-3xl font-bold text-blue-700">
               AI Emergency Assistant
             </h2>
@@ -103,7 +110,6 @@ export default function AIChat() {
               Ask anything related to disasters,
               accidents or first aid.
             </p>
-
           </div>
 
           <button
@@ -118,7 +124,10 @@ export default function AIChat() {
 
         <div className="bg-white rounded-2xl shadow-lg overflow-hidden">
 
-          <div className="h-[500px] overflow-y-auto p-5 space-y-5 bg-slate-50">
+          <div
+            ref={chatContainerRef}
+            className="h-[500px] overflow-y-auto p-5 space-y-5 bg-slate-50"
+          >
 
             {messages.map((msg, index) => (
 
@@ -134,8 +143,8 @@ export default function AIChat() {
                 <div
                   className={`max-w-[80%] rounded-2xl p-4 whitespace-pre-wrap leading-7 ${
                     msg.role === "user"
-                    ? "bg-blue-600 text-white"
-                    : "bg-white border border-gray-200 text-gray-900 shadow-sm"
+                      ? "bg-blue-600 text-white"
+                      : "bg-white border border-gray-200 text-gray-900 shadow-sm"
                   }`}
                 >
 
@@ -166,14 +175,15 @@ export default function AIChat() {
                   </div>
 
                   <p
-  className={
-    msg.role === "assistant"
-      ? "text-gray-900"
-      : "text-white"
-  }
->
-  {msg.text}
-</p>
+                    className={
+                      msg.role === "assistant"
+                        ? "text-gray-900"
+                        : "text-white"
+                    }
+                  >
+                    {msg.text}
+                  </p>
+
                 </div>
 
               </div>
@@ -201,48 +211,48 @@ export default function AIChat() {
 
             )}
 
-            <div ref={bottomRef}></div>
-
-          </div>
-          <div className="border-t bg-white p-4">
-
-<textarea
-  value={input}
-  onChange={(e) => setInput(e.target.value)}
-  onKeyDown={handleKeyDown}
-  rows={3}
-  placeholder="Describe your emergency..."
-  className="w-full border border-gray-300 bg-white text-gray-900 placeholder:text-gray-500 rounded-xl p-3 resize-none focus:outline-none focus:ring-2 focus:ring-blue-500"/>
-
-<div className="flex justify-between items-center mt-3">
-
-  <p className="text-sm text-gray-500">
-    Press <strong>Enter</strong> to send •
-    <strong> Shift + Enter</strong> for new line
-  </p>
-
-  <button
-    onClick={sendMessage}
-    disabled={loading || !input.trim()}
-    className="flex items-center gap-2 bg-blue-600 hover:bg-blue-700 disabled:bg-gray-400 text-white px-6 py-3 rounded-xl transition"
-  >
-    {loading ? (
-      <>
-        <Loader2
-          size={18}
-          className="animate-spin"
-        />
-        Sending...
-      </>
-    ) : (
-      <>
-        <Send size={18} />
-        Send
-      </>
-    )}
-  </button>
-
 </div>
+
+<div className="border-t bg-white p-4">
+
+  <textarea
+    value={input}
+    onChange={(e) => setInput(e.target.value)}
+    onKeyDown={handleKeyDown}
+    rows={3}
+    placeholder="Describe your emergency..."
+    className="w-full border border-gray-300 bg-white text-gray-900 placeholder:text-gray-500 rounded-xl p-3 resize-none focus:outline-none focus:ring-2 focus:ring-blue-500"
+  />
+
+  <div className="flex justify-between items-center mt-3">
+
+    <p className="text-sm text-gray-500">
+      Press <strong>Enter</strong> to send •{" "}
+      <strong>Shift + Enter</strong> for new line
+    </p>
+
+    <button
+      onClick={sendMessage}
+      disabled={loading || !input.trim()}
+      className="flex items-center gap-2 bg-blue-600 hover:bg-blue-700 disabled:bg-gray-400 text-white px-6 py-3 rounded-xl transition"
+    >
+      {loading ? (
+        <>
+          <Loader2
+            size={18}
+            className="animate-spin"
+          />
+          Sending...
+        </>
+      ) : (
+        <>
+          <Send size={18} />
+          Send
+        </>
+      )}
+    </button>
+
+  </div>
 
 </div>
 
