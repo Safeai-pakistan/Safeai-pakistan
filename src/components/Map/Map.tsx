@@ -46,6 +46,7 @@ import {
     ]);
   
     const [hospitals, setHospitals] = useState<Hospital[]>([]);
+    const [loading, setLoading] = useState(true);
   
     useEffect(() => {
       navigator.geolocation.getCurrentPosition(
@@ -67,8 +68,13 @@ import {
           } catch (err) {
             console.error(err);
           }
+  
+          setLoading(false);
         },
-        (err) => console.log(err),
+        (err) => {
+          console.log(err);
+          setLoading(false);
+        },
         {
           enableHighAccuracy: true,
         }
@@ -76,10 +82,25 @@ import {
     }, []);
   
     return (
-      <div className="max-w-6xl mx-auto mt-10 p-5">
-        <h2 className="text-3xl text-white font-bold mb-4">
-          📍 Nearby Hospitals
-        </h2>
+      <section
+        id="map"
+        className="max-w-6xl mx-auto mt-12 px-5 scroll-mt-24"
+      >
+        <div className="flex flex-wrap items-center justify-between mb-5">
+          <div>
+            <h2 className="text-3xl font-bold text-white">
+              📍 Nearby Hospitals
+            </h2>
+  
+            <p className="text-slate-400 mt-2">
+              Showing hospitals near your current location.
+            </p>
+          </div>
+  
+          <div className="bg-emerald-500/10 border border-emerald-500/30 px-4 py-2 rounded-full text-emerald-300 text-sm">
+            {loading ? "Locating..." : "Location Active"}
+          </div>
+        </div>
   
         <MapContainer
           center={position}
@@ -96,15 +117,11 @@ import {
             url="https://{s}.tile.openstreetmap.org/{z}/{x}/{y}.png"
           />
   
-          {/* User */}
-  
           <Marker position={position}>
             <Popup>
-              <b>You are here</b>
+              <b>📍 You are here</b>
             </Popup>
           </Marker>
-  
-          {/* Hospitals */}
   
           {hospitals.map((hospital) => (
             <Marker
@@ -112,24 +129,24 @@ import {
               position={[hospital.lat, hospital.lon]}
             >
               <Popup>
-  <div className="min-w-[200px]">
-    <h3 className="font-bold text-lg mb-2">
-      🏥 {hospital.tags?.name || "Unnamed Hospital"}
-    </h3>
-
-    <a
-      href={`https://www.google.com/maps/dir/?api=1&destination=${hospital.lat},${hospital.lon}`}
-      target="_blank"
-      rel="noopener noreferrer"
-      className="bg-blue-600 text-white px-3 py-2 rounded-lg inline-block mt-2"
-    >
-      🧭 Get Directions
-    </a>
-  </div>
-</Popup>
+                <div className="min-w-[200px]">
+                  <h3 className="font-bold text-lg mb-2">
+                    🏥 {hospital.tags?.name || "Unnamed Hospital"}
+                  </h3>
+  
+                  <a
+                    href={`https://www.google.com/maps/dir/?api=1&destination=${hospital.lat},${hospital.lon}`}
+                    target="_blank"
+                    rel="noopener noreferrer"
+                    className="bg-blue-600 hover:bg-blue-700 text-white px-3 py-2 rounded-lg inline-block mt-2"
+                  >
+                    🧭 Get Directions
+                  </a>
+                </div>
+              </Popup>
             </Marker>
           ))}
         </MapContainer>
-      </div>
+      </section>
     );
   }
