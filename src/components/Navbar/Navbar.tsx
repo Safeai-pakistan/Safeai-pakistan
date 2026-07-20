@@ -1,113 +1,69 @@
-import { useState } from "react";
-import { Shield, Menu, X } from "lucide-react";
+import { Shield } from "lucide-react";
 
 function Navbar() {
-  const [open, setOpen] = useState(false);
-
-  const scrollToSection = (id: string) => {
-    const element = document.getElementById(id);
-
-    if (element) {
-      element.scrollIntoView({
-        behavior: "smooth",
-      });
-    }
-
-    setOpen(false);
-  };
+  function scrollTo(id: string) {
+    document.getElementById(id)?.scrollIntoView({
+      behavior: "smooth",
+      block: "start",
+    });
+  }
 
   return (
-    <nav className="sticky top-0 z-50 bg-slate-900/90 backdrop-blur border-b border-slate-800">
+    <nav className="sticky top-0 z-50 bg-slate-900/95 backdrop-blur border-b border-slate-800">
 
-      <div className="max-w-7xl mx-auto flex items-center justify-between px-6 py-5">
-
-        <div className="flex items-center gap-3 cursor-pointer">
-          <div className="bg-cyan-500/20 p-2 rounded-xl">
-            <Shield className="text-cyan-400" size={28} />
-          </div>
-
-          <div>
-            <h1 className="text-2xl font-bold text-white">
-              Safe<span className="text-cyan-400">AI</span>
-            </h1>
-
-            <p className="text-xs text-slate-400">
-              Emergency Assistant
-            </p>
-          </div>
-        </div>
-
-        <ul className="hidden md:flex items-center gap-8 text-slate-300 font-medium">
-          <li
-            onClick={() => scrollToSection("home")}
-            className="cursor-pointer hover:text-cyan-400 transition"
-          >
-            Home
-          </li>
-
-          <li
-            onClick={() => scrollToSection("map")}
-            className="cursor-pointer hover:text-cyan-400 transition"
-          >
-            Map
-          </li>
-
-          <li
-            onClick={() => scrollToSection("ai")}
-            className="cursor-pointer hover:text-cyan-400 transition"
-          >
-            AI Assistant
-          </li>
-
-          <li
-            onClick={() => scrollToSection("contacts")}
-            className="cursor-pointer hover:text-cyan-400 transition"
-          >
-            Contacts
-          </li>
-        </ul>
+      <div className="max-w-7xl mx-auto px-4 py-4 flex flex-col md:flex-row items-center justify-between gap-4">
 
         <button
-          className="md:hidden text-white"
-          onClick={() => setOpen(!open)}
+          onClick={() => scrollTo("hero")}
+          className="flex items-center gap-3"
         >
-          {open ? <X size={30} /> : <Menu size={30} />}
+          <Shield className="text-cyan-400" size={30} />
+          <h1 className="text-2xl font-bold text-white">
+            SafeAI
+          </h1>
         </button>
-      </div>
 
-      {open && (
-        <div className="md:hidden border-t border-slate-800 bg-slate-900 px-6 py-4">
+        <ul className="flex flex-wrap justify-center gap-6 text-slate-300 text-sm md:text-base">
 
-          <button
-            onClick={() => scrollToSection("home")}
-            className="block w-full text-left text-white py-3"
+          <li
+            onClick={() => scrollTo("hero")}
+            className="cursor-pointer hover:text-cyan-400 transition"
           >
             Home
-          </button>
+          </li>
 
-          <button
-            onClick={() => scrollToSection("map")}
-            className="block w-full text-left text-white py-3"
+          <li
+            onClick={() => scrollTo("quick-actions")}
+            className="cursor-pointer hover:text-cyan-400 transition"
+          >
+            Emergency
+          </li>
+
+          <li
+            onClick={() => scrollTo("map")}
+            className="cursor-pointer hover:text-cyan-400 transition"
           >
             Map
-          </button>
+          </li>
 
-          <button
-            onClick={() => scrollToSection("ai")}
-            className="block w-full text-left text-white py-3"
+          <li
+            onClick={() => scrollTo("ai")}
+            className="cursor-pointer hover:text-cyan-400 transition"
           >
             AI Assistant
-          </button>
+          </li>
 
-          <button
-            onClick={() => scrollToSection("contacts")}
-            className="block w-full text-left text-white py-3"
+          <li
+            onClick={() => scrollTo("sos")}
+            className="cursor-pointer hover:text-cyan-400 transition"
           >
-            Emergency Contacts
-          </button>
+            SOS
+          </li>
 
-        </div>
-      )}
+        </ul>
+
+      </div>
+
     </nav>
   );
 }

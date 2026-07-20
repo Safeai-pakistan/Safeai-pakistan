@@ -33,10 +33,15 @@ import {
         <div className="relative flex flex-col items-center text-center">
   
           {/* Logo */}
-  
-          <div className="bg-cyan-500/20 border border-cyan-500 p-6 rounded-full shadow-2xl">
-            <ShieldAlert size={72} className="text-cyan-400" />
-          </div>
+          <div className="relative flex items-center justify-center w-36 h-36 rounded-full bg-gradient-to-br from-cyan-500 via-blue-600 to-slate-900 shadow-[0_0_50px_rgba(34,211,238,0.45)] border-4 border-cyan-400">
+  <ShieldAlert size={70} className="text-white" />
+
+  <div className="absolute -bottom-3 bg-slate-900 border border-cyan-400 rounded-full px-4 py-1">
+    <span className="text-cyan-300 text-sm font-bold">
+      SAFE AI
+    </span>
+  </div>
+</div>  
   
           {/* Live Status */}
   
@@ -48,38 +53,8 @@ import {
             </span>
           </div>
   
-          {/* Feature Badges */}
-  
-          <div className="mt-8 flex flex-wrap justify-center gap-3">
-  
-            <button
-              onClick={() => {
-                setPrompt("Help me in an emergency.");
-                scrollTo("ai");
-              }}
-              className="rounded-full border border-slate-700 bg-slate-800 px-4 py-2 text-cyan-300 transition hover:scale-105 hover:border-cyan-400 flex items-center gap-2"
-            >
-              <Brain size={18} />
-              AI Powered
-            </button>
-  
-            <button
-              onClick={() => scrollTo("map")}
-              className="rounded-full border border-slate-700 bg-slate-800 px-4 py-2 text-green-300 transition hover:scale-105 hover:border-green-400 flex items-center gap-2"
-            >
-              <MapPin size={18} />
-              Live GPS
-            </button>
-  
-            <button
-              onClick={() => scrollTo("map")}
-              className="rounded-full border border-slate-700 bg-slate-800 px-4 py-2 text-red-300 transition hover:scale-105 hover:border-red-400 flex items-center gap-2"
-            >
-              <Hospital size={18} />
-              Nearby Hospitals
-            </button>
-  
-          </div>
+          
+
   
           {/* Title */}
   
@@ -153,7 +128,7 @@ import {
             </div>
   
             <div
-              onClick={() => scrollTo("contacts")}
+              onClick={() => scrollTo("sos")}
               className="cursor-pointer rounded-2xl border border-slate-800 bg-slate-900 p-6 transition hover:border-red-500 hover:-translate-y-1"
             >
               <h3 className="text-4xl font-black text-red-400">
