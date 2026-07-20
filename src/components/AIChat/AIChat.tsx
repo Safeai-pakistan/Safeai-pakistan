@@ -394,36 +394,6 @@ const stopSpeaking = () => {
 
 </div>
 
-<div className="grid md:grid-cols-3 gap-4 mt-8">
-
-<button
-onClick={() =>
-  setInput("There is an earthquake. What should I do?")
-}
-className="bg-slate-900 border border-slate-800 rounded-xl p-4 hover:border-blue-500 transition"
->
-🌍 Earthquake
-</button>
-
-<button
-onClick={() =>
-  setInput("Someone is having a heart attack.")
-}
-className="bg-slate-900 border border-slate-800 rounded-xl p-4 hover:border-blue-500 transition"
->
-❤️ Heart Attack
-</button>
-
-<button
-onClick={() =>
-  setInput("There is a fire in my house.")
-}
-className="bg-slate-900 border border-slate-800 rounded-xl p-4 hover:border-blue-500 transition"
->
-🔥 Fire
-</button>
-
-</div>
 
 </div>
 </section>

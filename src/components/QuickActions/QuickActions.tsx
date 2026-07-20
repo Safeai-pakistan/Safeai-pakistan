@@ -34,7 +34,7 @@ import {
         border: "hover:border-green-500",
         description: "Emergency numbers",
         action: () => {
-          scrollTo("contacts");
+          scrollTo("sos");
         },
       },
       {
