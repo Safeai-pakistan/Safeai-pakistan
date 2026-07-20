@@ -60,15 +60,23 @@ export default function AIChat() {
 
   const [loading, setLoading] = useState(false);
   const [listening, setListening] = useState(false);
+  const [speaking, setSpeaking] = useState(false);
 
   const recognitionRef = useRef<any>(null);
   const bottomRef = useRef<HTMLDivElement>(null);
 
+  const firstLoad = useRef(true);
+
   useEffect(() => {
+    if (firstLoad.current) {
+      firstLoad.current = false;
+      return;
+    }
+
     bottomRef.current?.scrollIntoView({
       behavior: "smooth",
     });
-  }, [messages]);
+  }, [messages, loading]);
   
   useEffect(() => {
     localStorage.setItem(
@@ -107,19 +115,36 @@ export default function AIChat() {
     recognitionRef.current = recognition;
   }, []);
 
-  const speak = (text: string) => {
-    if (!("speechSynthesis" in window)) return;
+ const speak = (text: string) => {
+  if (!("speechSynthesis" in window)) return;
 
-    window.speechSynthesis.cancel();
+  window.speechSynthesis.cancel();
 
-    const utterance = new SpeechSynthesisUtterance(text);
+  const utterance = new SpeechSynthesisUtterance(text);
 
-    utterance.rate = 1;
-    utterance.pitch = 1;
-    utterance.volume = 1;
+  utterance.rate = 1;
+  utterance.pitch = 1;
+  utterance.volume = 1;
 
-    window.speechSynthesis.speak(utterance);
+  utterance.onstart = () => {
+    setSpeaking(true);
   };
+
+  utterance.onend = () => {
+    setSpeaking(false);
+  };
+
+  utterance.onerror = () => {
+    setSpeaking(false);
+  };
+
+  window.speechSynthesis.speak(utterance);
+};
+
+const stopSpeaking = () => {
+  window.speechSynthesis.cancel();
+  setSpeaking(false);
+};
 
   const startListening = () => {
     if (!recognitionRef.current) {
@@ -271,13 +296,24 @@ export default function AIChat() {
                   </p>
 
                   {msg.role === "assistant" && (
-                    <button
-                      onClick={() => speak(msg.text)}
-                      className="mt-3 flex items-center gap-2 text-xs text-blue-300 hover:text-blue-100"
-                    >
-                      <Volume2 size={15} />
-                      Speak
-                    </button>
+                    <div className="mt-3 flex gap-2">
+                      <button
+                        onClick={() => speak(msg.text)}
+                        className="flex items-center gap-2 text-xs text-blue-300 hover:text-blue-100"
+                      >
+                        <Volume2 size={15} />
+                        Speak
+                      </button>
+
+                      {speaking && (
+                        <button
+                          onClick={stopSpeaking}
+                          className="text-xs bg-red-600 hover:bg-red-700 px-3 py-1 rounded-lg"
+                        >
+                          Stop
+                        </button>
+                      )}
+                    </div>
                   )}
                 </div>
               </div>
