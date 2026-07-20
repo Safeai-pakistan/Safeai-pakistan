@@ -1,9 +1,6 @@
 import {
     ShieldAlert,
     ArrowRight,
-    MapPin,
-    Brain,
-    Hospital,
     Activity,
   } from "lucide-react";
   import { useAI } from "../../context/AIContext";
