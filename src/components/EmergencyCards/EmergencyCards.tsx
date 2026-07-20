@@ -10,20 +10,19 @@ import {
   
   function EmergencyCards() {
     function openAI(prompt: string) {
-      navigator.clipboard.writeText(prompt);
-  
-      document.getElementById("ai")?.scrollIntoView({
-        behavior: "smooth",
-        block: "start",
-      });
-  
-      setTimeout(() => {
-        alert(
-          "✅ Emergency prompt copied.\n\nScroll down to AI Assistant, paste (Ctrl+V) and press Ask SafeAI."
+      localStorage.setItem("safeai-emergency", prompt);
+    
+      document
+        .getElementById("ai")
+        ?.scrollIntoView({
+          behavior: "smooth",
+          block: "start",
+        });
+    
+        window.dispatchEvent(
+          new Event("safeai-emergency")
         );
-      }, 600);
-    }
-  
+          }  
     const disasters = [
       {
         title: "Fire",
