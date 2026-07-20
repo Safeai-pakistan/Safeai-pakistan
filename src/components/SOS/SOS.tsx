@@ -70,16 +70,26 @@ export default function SOS() {
   function shareLocation() {
     navigator.geolocation.getCurrentPosition((pos) => {
       const url = `https://www.google.com/maps?q=${pos.coords.latitude},${pos.coords.longitude}`;
-
+  
+      const message = `🚨 EMERGENCY ALERT 🚨
+  
+  I need immediate help.
+  
+  My live location:
+  ${url}
+  
+  Please reach me as soon as possible.
+  
+  Sent from SafeAI`;
+  
       if (navigator.share) {
         navigator.share({
-          title: "Emergency Location",
-          text: "This is my live location.",
-          url,
+          title: "🚨 Emergency Alert",
+          text: message,
         });
       } else {
-        navigator.clipboard.writeText(url);
-        alert("Location copied.");
+        navigator.clipboard.writeText(message);
+        alert("Emergency message copied. Paste it into WhatsApp or SMS.");
       }
     });
   }
