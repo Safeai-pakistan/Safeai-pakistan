@@ -1,50 +1,69 @@
 export type Hospital = {
-  id: string | number;
+  id: number;
   lat: number;
   lon: number;
   tags?: {
     name?: string;
     phone?: string;
+    emergency?: string;
   };
 };
 
+const OVERPASS_SERVERS = [
+  "https://overpass-api.de/api/interpreter",
+  "https://overpass.kumi.systems/api/interpreter",
+];
+
 export async function getNearbyHospitals(
   lat: number,
-  lon: number
+  lng: number
 ): Promise<Hospital[]> {
-  try {
-    const apiKey = import.meta.env.VITE_GEOAPIFY_API_KEY;
+  const query = `
+[out:json][timeout:20];
 
-    const url =
-      `https://api.geoapify.com/v2/places` +
-      `?categories=healthcare.hospital` +
-      `&filter=circle:${lon},${lat},10000` +
-      `&bias=proximity:${lon},${lat}` +
-      `&limit=20` +
-      `&apiKey=${apiKey}`;
+(
+  node["amenity"="hospital"](around:10000,${lat},${lng});
+  way["amenity"="hospital"](around:10000,${lat},${lng});
+  relation["amenity"="hospital"](around:10000,${lat},${lng});
+);
 
-    const res = await fetch(url);
+out center tags;
+`;
 
-    if (!res.ok) {
-      throw new Error(`HTTP ${res.status}`);
+  for (const server of OVERPASS_SERVERS) {
+    try {
+      const response = await fetch(server, {
+        method: "POST",
+        headers: {
+          "Content-Type": "text/plain;charset=UTF-8",
+        },
+        body: query,
+      });
+
+      if (!response.ok) continue;
+
+      const data = await response.json();
+
+      const hospitals: Hospital[] = (data.elements || [])
+        .map((item: any) => ({
+          id: item.id,
+          lat: item.lat ?? item.center?.lat,
+          lon: item.lon ?? item.center?.lon,
+          tags: item.tags ?? {},
+        }))
+        .filter(
+          (h: Hospital) =>
+            typeof h.lat === "number" &&
+            typeof h.lon === "number"
+        );
+
+      if (hospitals.length > 0) {
+        return hospitals;
+      }
+    } catch (err) {
+      console.error(server, err);
     }
-
-    const data = await res.json();
-
-    return (data.features || []).map((item: any) => ({
-      id: item.properties.place_id,
-      lat: item.properties.lat,
-      lon: item.properties.lon,
-      tags: {
-        name:
-          item.properties.name ||
-          item.properties.address_line1 ||
-          "Unnamed Hospital",
-        phone: item.properties.datasource?.raw?.phone,
-      },
-    }));
-  } catch (err) {
-    console.error("Geoapify:", err);
-    return [];
   }
+
+  return [];
 }
