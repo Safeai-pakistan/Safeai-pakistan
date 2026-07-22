@@ -7,7 +7,6 @@ import SOS from "./components/SOS/SOS";
 import AIChat from "./components/AIChat/AIChat";
 import EmergencyGuides from "./components/EmergencyGuides/EmergencyGuides";
 import EmergencyToolkit from "./components/EmergencyToolkit/EmergencyToolkit";
-import EmergencyContacts from "./components/EmergencyContacts/EmergencyContacts";
 import Weather from "./components/Weather/Weather";
 import FloatingSOS from "./components/FloatingSOS/FloatingSOS";
 import Footer from "./components/Footer/Footer";
@@ -50,17 +49,12 @@ function App() {
           <EmergencyToolkit />
         </section>
 
-        <section id="contacts">
-          <EmergencyContacts />
-        </section>
-
         <section id="weather">
           <Weather />
         </section>
       </main>
 
       <Footer />
-
       <FloatingSOS />
     </div>
   );

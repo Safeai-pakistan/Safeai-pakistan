@@ -1,6 +1,5 @@
 import { useEffect, useState } from "react";
 import {
-  Flashlight,
   MapPinned,
   Compass,
   Battery,
@@ -11,7 +10,6 @@ export default function EmergencyToolkit() {
   const [battery, setBattery] = useState("Unknown");
   const [heading, setHeading] = useState<number | null>(null);
   const [coords, setCoords] = useState("");
-  const [flashSupport, setFlashSupport] = useState(false);
 
   useEffect(() => {
     if ("DeviceOrientationEvent" in window) {
@@ -22,10 +20,7 @@ export default function EmergencyToolkit() {
       });
     }
 
-    setFlashSupport(
-      !!navigator.mediaDevices &&
-        !!navigator.mediaDevices.getUserMedia
-    );
+   
   }, []);
 
   async function checkBattery() {
@@ -66,13 +61,6 @@ export default function EmergencyToolkit() {
     });
   }
 
-  function flashlightInfo() {
-    alert(
-      flashSupport
-        ? "Camera access is available. Flashlight control depends on your device/browser."
-        : "Flashlight is not supported on this device/browser."
-    );
-  }
 
   return (
     <section className="max-w-6xl mx-auto mt-12 px-5">
@@ -120,20 +108,6 @@ export default function EmergencyToolkit() {
           </p>
         </div>
 
-        <button
-          onClick={flashlightInfo}
-          className="bg-slate-900 border border-slate-700 rounded-2xl p-6 hover:border-yellow-500 transition"
-        >
-          <Flashlight className="text-yellow-400 mb-3" size={42} />
-          <h3 className="text-white font-bold">
-            Flashlight
-          </h3>
-          <p className="text-slate-400 text-sm mt-2">
-            {flashSupport
-              ? "Support Detected"
-              : "Not Supported"}
-          </p>
-        </button>
 
       </div>
 
