@@ -1,12 +1,12 @@
-<p align="center">
+<palign="center">
 <img src="screenshots/banner.png" width="100%">
 </p>
 
-<h1 align="center">
+<h1align="center">
 🚨 SafeAI
 </h1>
 
-<h3 align="center">
+<h3align="center">
 AI-Powered Disaster & Emergency Assistant for Pakistan
 </h3>
 
