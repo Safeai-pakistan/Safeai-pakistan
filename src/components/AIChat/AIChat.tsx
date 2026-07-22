@@ -83,7 +83,9 @@ export default function AIChat() {
       "safeai-chat",
       JSON.stringify(messages)
     );
-  }, [messages]);  useEffect(() => {
+  }, [messages]); 
+  
+  useEffect(() => {
     const SpeechRecognition =
       window.SpeechRecognition || window.webkitSpeechRecognition;
 

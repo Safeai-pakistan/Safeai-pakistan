@@ -10,6 +10,7 @@ import EmergencyToolkit from "./components/EmergencyToolkit/EmergencyToolkit";
 import Weather from "./components/Weather/Weather";
 import FloatingSOS from "./components/FloatingSOS/FloatingSOS";
 import Footer from "./components/Footer/Footer";
+import ScrollToTopButton from "./components/ScrollToTopButton/ScrollToTopButton";
 
 function App() {
   return (
@@ -55,6 +56,7 @@ function App() {
       </main>
 
       <Footer />
+      <ScrollToTopButton />
       <FloatingSOS />
     </div>
   );
