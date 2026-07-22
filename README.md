@@ -1,5 +1,5 @@
 <p align="center">
-  <img src="./ScreenShots/banner.png" width="100%" alt="SafeAI Banner">
+  <img src="./screenshots/banner.png" width="100%" alt="SafeAI Banner">
 </p>
 
 <h1 align="center">
