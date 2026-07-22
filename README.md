@@ -487,11 +487,11 @@ The following screenshots demonstrate the main functionality and user interface 
 
 | Hospitals | Weather |
 |-----------|---------|
-| ![](screenshots/hospitals.png) | ![](screenshots/weather.png) |
+| ![](screenshots/Hospitals.png) | ![](screenshots/Weather.png) |
 
 | Emergency Toolkit | |
 |------------------|-|
-| ![](screenshots/toolkit.png) | |
+| ![](screenshots/Toolkit.png) | |
 
 | Contacts | Disaster categories |
 |-----------|---------|
